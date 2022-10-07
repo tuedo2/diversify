@@ -1,0 +1,23 @@
+{
+    "name": "Diversify-Simple",
+    "description": "Diversifying your Twitter feed",
+    "version": "1.0",
+    "manifest_version": 3,
+    "action": {
+        "default_popup": "popup.html"
+    },
+    "permissions": [
+        "tabs",
+        "webNavigation"
+    ],
+    "background": {
+        "service_worker": "background.js",
+        "type": "module"
+    },
+    "content_scripts": [
+        {
+          "matches": ["https://twitter.com/status/*"],
+          "js": ["content-script.js"]
+        }
+    ]
+}
