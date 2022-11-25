@@ -1,21 +1,32 @@
 
-async function getCurrentTab() {
+const output_container = document.getElementById("output-container")
+const button = document.querySelector("button")
+
+
+const tweetsURL = "http://localhost:8000/tweets"
+
+async function getCurrentURL() {
     let queryOptions = { active: true, lastFocusedWindow: true };
     // `tab` will either be a `tabs.Tab` instance or `undefined`.
     let [tab] = await chrome.tabs.query(queryOptions);
-    return tab;
+    return tab.url;
 }
 
+async function tweetsRequest(input) {
+    const response = await fetch(tweetsURL, {
+        mode: "cors",
+        method: "POST",
+        headers: {"Content-Type": "applications/json"},
+        body: JSON.stringify(input),
+    });
 
-document.addEventListener("DOMContentLoaded", async () => {
-    const currentTab = await getCurrentTab();
+    const output = await response.json();
+    console.log(output);
 
-    const tweetURL = currentTab.url;
+    output_container.innerHTML = output.text;
+}
 
-    if (tweetURL.includes("twitter.com/") && tweetURL.includes("/status/")) {
-        const status = tweetURL.split("/status/")[1];
-        document.getElementById('current-tweet').innerText = status;
-    } else {
-        document.getElementById('current-tweet').innerText = "This is not a tweet status!";
-    }
-});
+button.addEventListener("click", async() => {
+    const input = { text: await getCurrentURL() };
+    tweetsRequest(input);
+})

@@ -8,16 +8,10 @@
     },
     "permissions": [
         "tabs",
+        "activeTab",
         "webNavigation"
     ],
-    "background": {
-        "service_worker": "background.js",
-        "type": "module"
-    },
-    "content_scripts": [
-        {
-          "matches": ["https://twitter.com/status/*"],
-          "js": ["content-script.js"]
-        }
+    "host_permissions": [
+        "https://twitter.com/*"
     ]
 }
