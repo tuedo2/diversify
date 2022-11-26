@@ -13,17 +13,19 @@ CORS(app)
 
 @app.route('/')
 def hello_world():
-    return 'Hello, World!'
+    return 'Hello, World!' # This does nothing but I don't wanna delete it lmfao
 
 @app.route('/tweets', methods=['POST'])
-def tweets_handler():
+def tweets_handler(): # function is called on 'Diversify' click
     input_data = json.loads(request.data)
 
     print('POST /tweets')
     print('Input:', input_data)
 
-    url = input_data['url'] # the url of the current page
+    url = input_data['url'] # the url of the current page, sent from popup.js
 
+    # lines 27-35 basically identify wheather the current url is a tweet or not and give the id of the tweet
+    # essentially a proof of concept that the extension can interact with Flask server and identify a tweet visited
     output = ''
     if utp.is_twitter_status(url):
         output = utp.get_tweet_id_from_url(url)
@@ -31,6 +33,9 @@ def tweets_handler():
         output = 'deez nuts'
 
     output_data = {'text': output}
+
+    # TODO: Replace the above code with stuff that will recommend other news sources.
+    # Please try to put the code away into a utils file, I don't want this app.py file to be very long for readability
 
     print("Output:", output_data)
 
@@ -47,6 +52,9 @@ def sources_handler():
 
     output = utp.get_source_scores(username)
 
+    # TODO: Actually generate the recommendations
+    # Tue already has written this code on his computer at his apartment, he will add it once he moves back in!
+
     output_data = {'sources': output}
 
     print("Output:", output_data)
@@ -54,4 +62,4 @@ def sources_handler():
     return output_data
 
 
-app.run(host='localhost',port=8000)
+app.run(host='localhost',port=8000) # It's important that the parameters are exactly like this because of popup.js

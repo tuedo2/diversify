@@ -1,18 +1,20 @@
 <html>
     <link rel="stylesheet" href="popup.css" type="text/css" />
     <body>
-        <p id="output-container">Hello, World!</p>
-        <button id="tweet-status-button">Click!</button>
+        <p id="output-container"></p>
+        <button id="tweet-status-button">Diversify!</button>
 
         <p></p>
-        <input id="input-username">
-        <button id="source-list-button">Click!</button>
-        <div id="source-list-header"><b>Source List</b></div>
-        <ul id="source-list">
-            <li>deez</li>
-            <li>nuts</li>
+        <input id="input-username" placeholder="Enter a username">
+        <button id="source-list-button">Load Recommendations</button>
+        <div id="source-list-header"><b>Recommended accounts</b></div>
+        <ul id="source-list" class="no-bullets">
         </ul>
 
         <script src="popup.js" type="module"></script>
     </body>
 </html>
+
+<!-- TODO: make the UI prettier with this html file and the css file :D
+    This step is not strictly necessary, though. Make sure if you change
+    the id values in anything you change it throughout the rest of the project -->

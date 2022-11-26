@@ -1,4 +1,3 @@
-
 const tweet_status = document.getElementById("tweet-status");
 const tweet_status_button = document.getElementById("tweet-status-button");
 const source_list = document.getElementById("source-list");
