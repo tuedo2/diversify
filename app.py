@@ -24,13 +24,14 @@ def tweets_handler(): # function is called on 'Diversify' click
 
     url = input_data['url'] # the url of the current page, sent from popup.js
 
-    # lines 27-35 basically identify wheather the current url is a tweet or not and give the id of the tweet
+    # lines 27-35 basically identify wheather the current url is a tweet or not and give the text of the tweet
     # essentially a proof of concept that the extension can interact with Flask server and identify a tweet visited
     output = ''
     if utp.is_twitter_status(url):
-        output = utp.get_tweet_id_from_url(url)
+        tweet_id = utp.get_tweet_id_from_url(url)
+        output = utp.get_text_from_tweet_id(tweet_id)
     else:
-        output = 'deez nuts'
+        output = 'not a tweet status :P'
 
     output_data = {'text': output}
 
