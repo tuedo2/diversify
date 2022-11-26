@@ -14,3 +14,12 @@ def get_tweet_id_from_url(url):
     tweet_id = url.split('/status/')[1]
 
     return tweet_id
+
+def get_source_scores(username):
+    print('calling function on', username)
+    sample_sources = [
+        "axios", "bbc", "csmonitor", "Forbes", "MarketWatch", "NewsNation",
+        "Newsweek", "RealClearNews", "Reuters", "TheHill", "WSJ"
+    ]
+
+    return sample_sources

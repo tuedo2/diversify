@@ -1,9 +1,11 @@
 
-const output_container = document.getElementById("output-container")
-const button = document.querySelector("button")
+const tweet_status = document.getElementById("tweet-status");
+const tweet_status_button = document.getElementById("tweet-status-button");
+const source_list = document.getElementById("source-list");
+const source_list_button = document.getElementById("source-list-button");
 
-
-const tweetsURL = "http://localhost:8000/tweets"
+const tweetsEndpoint = "http://localhost:8000/tweets"
+const sourcesEndpoint = "http://localhost:8000/sources"
 
 async function getCurrentURL() {
     let queryOptions = { active: true, lastFocusedWindow: true };
@@ -13,7 +15,7 @@ async function getCurrentURL() {
 }
 
 async function tweetsRequest(input) {
-    const response = await fetch(tweetsURL, {
+    const response = await fetch(tweetsEndpoint, {
         mode: "cors",
         method: "POST",
         headers: {"Content-Type": "applications/json"},
@@ -23,10 +25,33 @@ async function tweetsRequest(input) {
     const output = await response.json();
     console.log(output);
 
-    output_container.innerHTML = output.text;
+    tweet_status.innerHTML = output.text;
 }
 
-button.addEventListener("click", async() => {
-    const input = { text: await getCurrentURL() };
+tweet_status_button.addEventListener("click", async() => {
+    const input = { url: await getCurrentURL() };
     tweetsRequest(input);
+})
+
+async function sourcesRequest(input) {
+    const response = await fetch(sourcesEndpoint, {
+        mode: "cors",
+        method: "POST",
+        headers: {"Content-Type": "applications/json"},
+        body: JSON.stringify(input),
+    });
+
+    const output = await response.json();
+    console.log(output);
+
+    source_list.innerHTML = "";
+    for (var i = 0; i < output.sources.length; i++) {
+        source_list.innerHTML += "<li>" + output.sources[i] + "</li>";
+    }
+}
+
+source_list_button.addEventListener("click", () => {
+    let user = document.getElementById("input-username").value
+    const input = { username: user };
+    sourcesRequest(input);
 })
