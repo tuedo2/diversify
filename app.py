@@ -3,7 +3,7 @@ from flask_cors import CORS
 import json
 
 import utils.tweepy as utp
-
+import utils.nlp as nlp
 
 app = Flask(__name__)
 
@@ -26,14 +26,21 @@ def tweets_handler(): # function is called on 'Diversify' click
 
     # lines 27-35 basically identify wheather the current url is a tweet or not and give the text of the tweet
     # essentially a proof of concept that the extension can interact with Flask server and identify a tweet visited
-    output = ''
+
+    articles = []
+    error = ''
     if utp.is_twitter_status(url):
         tweet_id = utp.get_tweet_id_from_url(url)
-        output = utp.get_text_from_tweet_id(tweet_id)
-    else:
-        output = 'not a tweet status :P'
+        text = utp.get_text_from_tweet_id(tweet_id)
 
-    output_data = {'text': output}
+        if nlp.containsURL(text):
+            articles = nlp.getArticles(text)
+        else:
+            error = 'tweet contains no article'
+    else:
+        error = 'not a tweet status'
+
+    output_data = { 'articles': articles, 'error': error}
 
     # TODO: Replace the above code with stuff that will recommend other news sources.
     # Please try to put the code away into a utils file, I don't want this app.py file to be very long for readability

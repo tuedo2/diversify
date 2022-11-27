@@ -24,7 +24,11 @@ async function tweetsRequest(input) {
     const output = await response.json();
     console.log(output);
 
-    tweet_status.innerHTML = output.text;
+    if (output.error.length != 0) {
+        tweet_status.innerHTML = output.error;
+    } else {
+        // do something
+    }
 }
 
 tweet_status_button.addEventListener("click", async() => {
