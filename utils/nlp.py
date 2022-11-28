@@ -4,6 +4,8 @@ import newspaper
 from newspaper import Article
 from newsapi import NewsApiClient
 
+from collections import Counter
+
 import spacy
 import en_core_web_sm
 
@@ -26,14 +28,23 @@ NEWS_API_KEY = '52653260d37b4c7d9efd3731ac9156e3'
 newsapi = NewsApiClient(api_key=NEWS_API_KEY)
 
 def containsURL(text):
-    # TODO
-    return False
+    url_list = re.findall(r'(https?://[^\s]+)', text)
+    if not url_list:
+        return False
+    else:
+        return True
 
-# presumes article exists
-def getArticlesFromText(text):
-    pass # should return a list of some sort
+def getBasicKeywords(url):
+    article = Article(url)
+    article.download()
+    article.parse()
 
-def getBasicKeywordsSpacy(n,url):
+    keywords = article.keywords
+    # keywords.append(article.title)
+
+    return keywords
+
+def getBasicKeywordsSpacy(url, n=10):
     # Access the HTML of the url and scrape the data we need
     article = Article(url)
     article.download()
@@ -58,7 +69,7 @@ def getArticlesUsingNLPBasicKeywords(tweet_txt):
     list_of_urls = re.findall(r'(https?://[^\s]+)', tweet_txt)
     response_list = []
     for url in list_of_urls:
-        keywords_list = getBasicKeywordsSpacy(url)
+        keywords_list = getBasicKeywords(url)
 
         query_str = ""
         for i in range(len(keywords_list)):
@@ -66,8 +77,26 @@ def getArticlesUsingNLPBasicKeywords(tweet_txt):
             if i != len(keywords_list) - 1:
                 query_str += " OR "
 
-        top_headlines = newsapi.get_everything(q=query_str[0:len(query_str) - 1], sort_by='relevancy',
+        if len(query_str) > 500:
+            query_str = query_str[:500]
+
+        top_headlines = newsapi.get_everything(q=query_str, sort_by='relevancy',
                                           language='en')
 
         response_list.append(top_headlines)
     return response_list
+
+# presumes article exists
+def getArticlesFromText(text, num_results=5):
+    res = getArticlesUsingNLPBasicKeywords(text)
+    article_list = res[0]['articles']
+    if len(article_list) < num_results:
+        num_results = len(article_list)
+
+    images = [article_list[i]['urlToImage'] for i in range(num_results)]
+    sources = [article_list[i]['source']['name'] for i in range(num_results)]
+    titles = [article_list[i]['title'] for i in range(num_results)]
+    urls = [article_list[i]['url'] for i in range(num_results)]
+
+    return images, sources, titles, urls
+

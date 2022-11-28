@@ -24,33 +24,27 @@ def tweets_handler(): # function is called on 'Diversify' click
 
     url = input_data['url'] # the url of the current page, sent from popup.js
 
-    # lines 27-35 basically identify wheather the current url is a tweet or not and give the text of the tweet
-    # essentially a proof of concept that the extension can interact with Flask server and identify a tweet visited
-
-    articles = []
+    images, sources, titles, urls = [], [], [], []
     error = ''
     if utp.is_twitter_status(url):
         tweet_id = utp.get_tweet_id_from_url(url)
         text = utp.get_text_from_tweet_id(tweet_id)
 
         if nlp.containsURL(text):
-            articles = nlp.getArticles(text)
+            images, sources, titles, urls = nlp.getArticlesFromText(text)
         else:
             error = 'tweet contains no article'
     else:
         error = 'not a tweet status'
 
-    output_data = { 'articles': articles, 'error': error}
-
-    # TODO: Replace the above code with stuff that will recommend other news sources.
-    # Please try to put the code away into a utils file, I don't want this app.py file to be very long for readability
+    output_data = { 'images': images, 'sources': sources, 'titles': titles, 'urls': urls, 'error': error}
 
     print("Output:", output_data)
 
     return output_data
 
 @app.route('/sources', methods=['POST'])
-def sources_handler():
+def sources_handler(): # Function is called on 'Load Recomendations' click
     input_data = json.loads(request.data)
 
     print('POST /sources')
@@ -58,12 +52,14 @@ def sources_handler():
 
     username = input_data['username']
 
-    output = utp.get_source_scores(username)
+    output = []
+    error = ''
+    try:
+        output = utp.get_source_list(username)
+    except Exception:
+        error = 'Enter a valid username'
 
-    # TODO: Actually generate the recommendations
-    # Tue already has written this code on his computer at his apartment, he will add it once he moves back in!
-
-    output_data = {'sources': output}
+    output_data = {'sources': output, 'error': error}
 
     print("Output:", output_data)
 

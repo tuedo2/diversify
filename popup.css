@@ -7,3 +7,8 @@ ul.no-bullets {
     padding: 0;
     margin: 0;
 }
+
+img.icon {
+    width: 20px;
+    height: 20px;
+}
