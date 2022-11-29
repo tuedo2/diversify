@@ -27,20 +27,16 @@ async function tweetsRequest(input) {
     const output = await response.json();
     console.log(output);
 
-    if (output.sources.length == 0) {
-        tweet_status.innerHTML = output.error;
-    } else {
-        const num_articles = output.sources.length;
+    tweet_status.innerHTML = output.error;
+    const num_articles = output.ids.length;
 
-        article_list.innerHTML = "";
-        for (var i = 0; i < num_articles; i++) {
-            var image = output.images[i];
-            var source = output.sources[i];
-            var title = output.titles[i];
-            var url = output.urls[i];
+    article_list.innerHTML = "";
+    for (var i = 0; i < num_articles; i++) {
+        var id = output.ids[i];
+        var text = output.texts[i];
 
-            article_list.innerHTML += `<li><img src="${image}" class="icon"> <it>(${source})</it>: <a href="${url}">${title}</a></li>`
-        }
+
+        article_list.innerHTML += `<li class="tweets">${text} (<a href="https://twitter.com/user/status/${id}"><it>link</it></a>)</li>`
     }
 }
 

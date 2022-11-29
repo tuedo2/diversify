@@ -2,7 +2,7 @@ from flask import Flask, request, render_template
 from flask_cors import CORS
 import json
 
-import utils.tweepy as utp
+import utils.twitter as utw
 import utils.nlp as nlp
 
 app = Flask(__name__)
@@ -24,20 +24,20 @@ def tweets_handler(): # function is called on 'Diversify' click
 
     url = input_data['url'] # the url of the current page, sent from popup.js
 
-    images, sources, titles, urls = [], [], [], []
+    ids, texts = [], []
     error = ''
-    if utp.is_twitter_status(url):
-        tweet_id = utp.get_tweet_id_from_url(url)
-        text = utp.get_text_from_tweet_id(tweet_id)
+    if utw.is_twitter_status(url):
+        tweet_id = utw.get_tweet_id_from_url(url)
+        text = utw.get_text_from_tweet_id(tweet_id)
 
         if nlp.containsURL(text):
-            images, sources, titles, urls = nlp.getArticlesFromText(text)
+            ids, texts = nlp.getTweetsFromText(text)
         else:
             error = 'tweet contains no article'
     else:
         error = 'not a tweet status'
 
-    output_data = { 'images': images, 'sources': sources, 'titles': titles, 'urls': urls, 'error': error}
+    output_data = { 'ids': ids, 'texts': texts, 'error': error}
 
     print("Output:", output_data)
 
@@ -55,7 +55,7 @@ def sources_handler(): # Function is called on 'Load Recomendations' click
     output = []
     error = ''
     try:
-        output = utp.get_source_list(username)
+        output = utw.get_source_list(username)
     except Exception:
         error = 'Enter a valid username'
 
@@ -66,4 +66,4 @@ def sources_handler(): # Function is called on 'Load Recomendations' click
     return output_data
 
 
-app.run(host='localhost',port=8000) # It's important that the parameters are exactly like this because of popup.js
+app.run(host='localhost', port=8000) # It's important that the parameters are exactly like this because of popup.js
