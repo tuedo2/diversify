@@ -36,7 +36,7 @@ async function tweetsRequest(input) {
         var text = output.texts[i];
 
 
-        article_list.innerHTML += `<li class="tweets">${text} (<a href="https://twitter.com/user/status/${id}"><it>link</it></a>)</li>`
+        article_list.innerHTML += `<li>${text} (<a href="https://twitter.com/user/status/${id}"><it>link</it></a>)</li>`
     }
 }
 

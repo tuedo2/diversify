@@ -1,5 +1,13 @@
 body {
     width: 400px;
+    font-family: "Helvetica Neue", Roboto, "Segoe UI", Calibri, sans-serif;
+}
+
+div.header {
+    background-color: #1D9BF0;
+    color: white;
+    justify-content: center;
+    text-align: center;
 }
 
 ul.no-bullets {
@@ -13,8 +21,3 @@ img.icon {
     height: 20px;
 }
 
-ul li.tweets {
-    background: #1D9BF0;
-    color: white;
-    margin: 5px;
-}
